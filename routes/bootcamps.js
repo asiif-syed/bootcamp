@@ -1,11 +1,11 @@
-const express = require("express");
-const {
-  getBootcamps,
-  getBootcamp,
+import express from "express";
+import {
   createBootcamp,
-  updateBootcamp,
   deleteBootcamp,
-} = require("../controllers/bootcamps");
+  getBootcamp,
+  getBootcamps,
+  updateBootcamp,
+} from "../controllers/bootcamps";
 
 const router = express.Router();
 
@@ -19,4 +19,4 @@ router.put("/:id", updateBootcamp);
 
 router.delete("/:id", deleteBootcamp);
 
-module.exports = router;
+export default router;

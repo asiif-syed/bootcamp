@@ -1,7 +1,8 @@
-const fs = require("fs");
-const mongoose = require("mongoose");
-const dotenv = require("dotenv");
-const BootcampModel = require("./models/Bootcamps");
+
+import dotenv from "dotenv";
+import mongoose from "mongoose";
+import fs from "fs";
+import { BootcampModel } from "./models/Bootcamps";
 
 // To load env vars
 dotenv.config({ path: "./config/config.env" });

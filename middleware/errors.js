@@ -1,6 +1,6 @@
-const ErrorResponse = require("../utils/errorResponse");
+import { ErrorResponse } from "../utils/errorResponse";
 
-const errorHandler = (err, req, res, next) => {
+export const errorHandler = (err, req, res, next) => {
   let error = { ...err };
   // Log to console
   console.log(err, err.name);
@@ -23,5 +23,3 @@ const errorHandler = (err, req, res, next) => {
     error: error.message,
   });
 };
-
-module.exports = errorHandler;

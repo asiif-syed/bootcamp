@@ -1,9 +1,9 @@
-const express = require("express");
-const dotenv = require("dotenv");
-const bootcamps = require("./routes/bootcamps");
-const morgan = require("morgan");
-const connectDB = require("./config/db");
-const errorHandler = require("./middleware/errors");
+import express from "express";
+import dotenv from "dotenv";
+import bootcampsRouter from "./routes/bootcamps";
+import morgan from "morgan";
+import { connectDB } from "./config/db";
+import { errorHandler } from "./middleware/errors";
 
 // To use .env file and it's variables
 dotenv.config({ path: "./config/config.env" });
@@ -19,7 +19,7 @@ if (process.env.NODE_ENV === "development") {
 }
 
 // Routes to bootcamps
-app.use("/api/v1/bootcamps", bootcamps);
+app.use("/api/v1/bootcamps", bootcampsRouter);
 
 // Error handler
 app.use(errorHandler);

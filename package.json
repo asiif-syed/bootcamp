@@ -2,10 +2,11 @@
   "name": "bootcamp",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "main": "server.js",
   "scripts": {
     "start": "NODE_ENV=production node server",
-    "dev": "nodemon server"
+    "dev": "nodemon --experimental-specifier-resolution=node server"
   },
   "author": "Asif Syed",
   "license": "MIT",
@@ -18,6 +19,9 @@
     "slugify": "^1.6.5"
   },
   "devDependencies": {
+    "@babel/core": "^7.18.5",
+    "@babel/node": "^7.18.5",
+    "@babel/preset-env": "^7.18.2",
     "nodemon": "^2.0.16"
   }
 }
