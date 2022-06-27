@@ -2,9 +2,9 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import fs from "fs";
 import { BootcampModel } from "./models/Bootcamps";
+import { CourseModel } from "./models/Course";
 import path from "path";
 import { fileURLToPath } from "url";
-
 // To load env vars
 dotenv.config({ path: "./config/config.env" });
 
@@ -19,11 +19,15 @@ const __dirname = path.dirname(__filename);
 const bootcamps = JSON.parse(
   fs.readFileSync(`${__dirname}/_data/bootcamps.json`, "utf-8")
 );
+const courses = JSON.parse(
+  fs.readFileSync(`${__dirname}/_data/courses.json`, "utf-8")
+);
 
 // Import into DB
 const importsData = async () => {
   try {
     await BootcampModel.create(bootcamps);
+    await CourseModel.create(courses);
     console.log("Data imported");
   } catch (err) {
     console.log("%seeder.js line:22 err", "color: #007acc;", err);
@@ -33,6 +37,7 @@ const importsData = async () => {
 const deleteData = async () => {
   try {
     await BootcampModel.deleteMany();
+    await CourseModel.deleteMany();
     console.log("Data is deleted");
   } catch (err) {
     console.log("%seeder.js line:22 err", "color: #007acc;", err);

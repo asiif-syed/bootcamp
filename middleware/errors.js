@@ -2,8 +2,7 @@ import { ErrorResponse } from "../utils/errorResponse";
 
 export const errorHandler = (err, req, res, next) => {
   let error = { ...err };
-  // Log to console
-  console.log(err, err.name);
+  error.message = err.message;
   //   Mongoose Bad Request
   if (err.name === "CastError") {
     const message = `Bootcamp not found with provided id.`;
