@@ -1,8 +1,9 @@
-
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import fs from "fs";
 import { BootcampModel } from "./models/Bootcamps";
+import path from "path";
+import { fileURLToPath } from "url";
 
 // To load env vars
 dotenv.config({ path: "./config/config.env" });
@@ -13,6 +14,8 @@ if (process.env.MONGO_URI) {
 }
 
 // Read JSON Files
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const bootcamps = JSON.parse(
   fs.readFileSync(`${__dirname}/_data/bootcamps.json`, "utf-8")
 );

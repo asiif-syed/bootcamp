@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 import slugify from "slugify";
 import { geoCoder } from "../utils/geoCoder";
 
-
 const BootcampShema = new mongoose.Schema({
   name: {
     type: String,
@@ -98,6 +97,9 @@ const BootcampShema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now,
+  },
+  averageCost: {
+    type: Number,
   },
 });
 
