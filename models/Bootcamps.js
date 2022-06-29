@@ -102,6 +102,10 @@ const BootcampShema = new mongoose.Schema(
     averageCost: {
       type: Number,
     },
+    user: {
+      type: mongoose.Schema.ObjectId,
+      ref: "Bootcamps",
+    },
   },
   {
     toJSON: { virtuals: true },

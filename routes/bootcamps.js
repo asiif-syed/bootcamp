@@ -10,6 +10,7 @@ import {
 } from "../controllers/bootcamps";
 // Importing other resource routers
 import { advancedResults } from "../middleware/advancedResults";
+import { authorize, isAuthenticated } from "../middleware/auth";
 import { BootcampModel } from "../models/Bootcamps";
 
 import courseRouter from "./courses";
@@ -23,14 +24,34 @@ router.get("/", advancedResults(BootcampModel, "courses"), getBootcamps);
 
 router.get("/:id", getBootcamp);
 
-router.post("/", createBootcamp);
+router.post(
+  "/",
+  isAuthenticated,
+  authorize("publisher", "admin"),
+  createBootcamp
+);
 
-router.put("/:id", updateBootcamp);
+router.put(
+  "/:id",
+  isAuthenticated,
+  authorize("publisher", "admin"),
+  updateBootcamp
+);
 
-router.delete("/:id", deleteBootcamp);
+router.delete(
+  "/:id",
+  isAuthenticated,
+  authorize("publisher", "admin"),
+  deleteBootcamp
+);
 
 router.get("/radius/:zipcode/:distance", getBootcampsInRadius);
 
-router.put("/:id/photo", bootcampPhotoUpload);
+router.put(
+  "/:id/photo",
+  isAuthenticated,
+  authorize("publisher", "admin"),
+  bootcampPhotoUpload
+);
 
 export default router;

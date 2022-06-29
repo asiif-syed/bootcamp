@@ -44,11 +44,16 @@ export const getCourse = asyncHandler(async (req, res, next) => {
 // @router  POST /api/v1/bootcamps/:bootcampId/courses
 // @access  Private
 export const addCourse = asyncHandler(async (req, res, next) => {
-  req.body.bootcamp = req.params.bootcampId;
+  req.params.bootcampId = req.body.bootcamp;
+  req.body.user = req.user.id;
 
   const bootcamp = await BootcampModel.findById(req.params.bootcampId);
   if (!bootcamp) {
     return next(new ErrorResponse("No bootcamp exists with provided id.", 404));
+  }
+  // Checking if the user is the owner of the bootcamp
+  if (bootcamp.user.toString() !== req.user.id && req.user.role !== "admin") {
+    return next(new ErrorResponse("Permission Denied", 403));
   }
   const course = await CourseModel.create(req.body);
 
@@ -63,8 +68,13 @@ export const addCourse = asyncHandler(async (req, res, next) => {
 // @access  Private
 export const updateCourse = asyncHandler(async (req, res, next) => {
   let course = await CourseModel.findById(req.params.id);
+
   if (!course) {
     return next(new ErrorResponse("No course exists with provided id.", 404));
+  }
+  // Checking if the user is the owner of the course
+  if (course.user.toString() !== req.user.id && req.user.role !== "admin") {
+    return next(new ErrorResponse("Permission Denied", 403));
   }
   course = await CourseModel.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
@@ -84,6 +94,10 @@ export const deleteCourse = asyncHandler(async (req, res, next) => {
   const course = await CourseModel.findById(req.params.id);
   if (!course) {
     return next(new ErrorResponse("No course exists with provided id.", 404));
+  }
+  // Checking if the user is the owner of the course
+  if (course.user.toString() !== req.user.id && req.user.role !== "admin") {
+    return next(new ErrorResponse("Permission Denied", 403));
   }
   await course.remove();
 

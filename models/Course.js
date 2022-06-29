@@ -34,6 +34,10 @@ const CourseSchema = mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: "Bootcamps",
   },
+  user: {
+    type: mongoose.Schema.ObjectId,
+    ref: "Bootcamps",
+  },
 });
 
 // Static method to calculate avg cost for a course
@@ -64,7 +68,7 @@ CourseSchema.post("save", function () {
 });
 
 // Call getAverageCost before remove
-CourseSchema.pre("remove", function () {
+CourseSchema.pre("remove", function (next) {
   this.constructor.getAverageCost(this.bootcamp);
   next();
 });

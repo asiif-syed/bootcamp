@@ -22,10 +22,22 @@ export const getBootcamp = asyncHandler(async (req, res, next) => {
   res.status(200).json({ success: true, data: bootcamp });
 });
 
-// @desc    Get a new bootcamp
+// @desc    Add a new bootcamp
 // @router  POST /api/v1/bootcamps
 // @access  Private
 export const createBootcamp = asyncHandler(async (req, res, next) => {
+  //  Add user to req.body
+  req.body.user = req.user.id;
+
+  // Check for published bootcamps
+  const publishedBootcamps = await BootcampModel.findOne({ user: req.user.id });
+  // If user is not admin, they can add only one bootcamp
+  if (publishedBootcamps && req.user.role !== "admin") {
+    return next(
+      new ErrorResponse("A bootcamp already exists with this user id", 400)
+    );
+  }
+
   const bootcamp = await BootcampModel.create(req.body);
   res.status(201).json({ success: true, data: bootcamp });
 });
@@ -34,18 +46,22 @@ export const createBootcamp = asyncHandler(async (req, res, next) => {
 // @router  PUT /api/v1/bootcamps/:id
 // @access  Private
 export const updateBootcamp = asyncHandler(async (req, res, next) => {
-  const bootcamp = await BootcampModel.findByIdAndUpdate(
-    req.params.id,
-    req.body,
-    {
-      new: true,
-      runValidators: true,
-    }
-  );
+  let bootcamp = await BootcampModel.findOne({ id: req.params.id });
+  // Checking if the bootcamp exists
   if (!bootcamp) {
     const err = new ErrorResponse("Bootcamp not found with provided id", 404);
     return next(err);
   }
+
+  // Checking if the user is the owner of bootcamp
+  if (bootcamp.user.toString() !== req.user.id && req.user.role !== "admin") {
+    return next(new ErrorResponse("Permission denied.", 403));
+  }
+
+  bootcamp = await BootcampModel.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
   res.status(201).json({ success: true, data: bootcamp });
 });
 
@@ -54,10 +70,18 @@ export const updateBootcamp = asyncHandler(async (req, res, next) => {
 // @access  Private
 export const deleteBootcamp = asyncHandler(async (req, res, next) => {
   const bootcamp = await BootcampModel.findById(req.params.id);
+
+  // Checking if the bootcamp exists
   if (!bootcamp) {
     const err = new ErrorResponse("Bootcamp not found with provided id", 404);
     return next(err);
   }
+
+  // Checking if the user is the owner of bootcamp
+  if (bootcamp.user.toString() !== req.user.id && req.user.role !== "admin") {
+    return next(new ErrorResponse("Permission denied.", 403));
+  }
+
   bootcamp.remove();
   res.status(201).json({ success: true, data: {} });
 });
@@ -95,6 +119,12 @@ export const bootcampPhotoUpload = asyncHandler(async (req, res, next) => {
     const err = new ErrorResponse("Bootcamp not found with provided id", 404);
     return next(err);
   }
+
+  // Checking if the user is the owner of bootcamp
+  if (bootcamp.user.toString() !== req.user.id && req.user.role !== "admin") {
+    return next(new ErrorResponse("Permission denied.", 403));
+  }
+
   if (!req.files) {
     const err = new ErrorResponse("Please upload a file.", 400);
     return next(err);
