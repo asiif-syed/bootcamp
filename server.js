@@ -10,6 +10,10 @@ import fileUpload from "express-fileupload";
 import path from "path";
 import { fileURLToPath } from "url";
 import cookieParser from "cookie-parser";
+import mongoSanitize from "express-mongo-sanitize";
+import helmet from 'helmet';
+import xss from "xss-clean"
+import cors from 'cors';
 
 // To use .env file and it's variables
 dotenv.config({ path: "./config/config.env" });
@@ -18,6 +22,9 @@ const app = express();
 
 // Body Parser
 app.use(express.json());
+
+// Enabling CORS
+app.use(cors());
 
 // Dev logging middleware
 if (process.env.NODE_ENV === "development") {
@@ -28,6 +35,15 @@ app.use(fileUpload());
 
 // Cookie Parser
 app.use(cookieParser());
+
+// Sanitize the data 
+app.use(mongoSanitize());
+
+// Set security headers
+app.use(helmet());
+
+// Prevent Cross Site scripting
+app.use(xss());
 
 // Set static folder
 const __filename = fileURLToPath(import.meta.url);

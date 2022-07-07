@@ -48,3 +48,30 @@ export const getLoggedinUser = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({ success: true, data: user });
 });
+
+// @desc    Forgot Password
+// @router  POST /api/v1/auth/forgotpassword
+// @access  Public
+export const forgotPassword = asyncHandler(async (req, res, next) => {
+  const user = await UserModel.findOne({ email: req.body.email });
+
+  if (!user) {
+    return next(new ErrorResponse("No user found with provided email.", 400));
+  }
+
+  // Get reset token
+  const resetToken = user.getResetPasswordToken();
+  await user.save({ validateBeforeSave: false });
+  res.status(200).json({ success: true, data: user });
+});
+
+// @desc    Logout
+// @router  get /api/v1/auth/logout
+// @access  Public
+export const logout = asyncHandler(async (req, res, next) => {
+res.cookie('token', "none", {
+  expires: new Date(Date.now() + 10 * 1000),
+  httpsOnly: true
+}) 
+  res.status(200).json({ success: true, data:{} });
+});
