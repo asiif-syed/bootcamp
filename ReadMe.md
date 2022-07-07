@@ -1,6 +1,6 @@
-# DevCamper Backend API Specifications
+# Bootcamp Backend API Specifications
 
-Create the backend for a bootcamp directory website. The frontend/UI will be created by another team (future course). The html/css template has been created and can be used as a reference for functionality. All of the functionality below needs to be fully implmented in this project.
+Created the backend for a bootcamp directory website. It contains all the below features.
 
 ### Bootcamps
 - List all bootcamps in the database
